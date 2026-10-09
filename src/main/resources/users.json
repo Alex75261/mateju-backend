@@ -1,0 +1,24 @@
+[
+  {
+    "id": "stu-001",
+    "username": "ana.estudiante",
+    "password": "Mateju2026!",
+    "displayName": "Ana López",
+    "role": "STUDENT"
+  },
+  {
+    "id": "pro-001",
+    "username": "carlos.profesor",
+    "password": "Mateju2026!",
+    "displayName": "Carlos Ramírez",
+    "role": "PROFESSOR"
+  },
+  {
+    "id": "adm-001",
+    "username": "admin.mateju",
+    "password": "Mateju2026!",
+    "displayName": "Administración Mateju",
+    "role": "ADMIN"
+  }
+]
+
