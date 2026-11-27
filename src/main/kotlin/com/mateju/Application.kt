@@ -2,6 +2,7 @@ package com.mateju
 
 import com.mateju.model.HealthResponse
 import com.mateju.model.ApiError
+import com.mateju.repository.DatabaseUserRepository
 import com.mateju.repository.JsonUserRepository
 import com.mateju.repository.UserRepository
 import com.mateju.routes.authRoutes
@@ -15,6 +16,7 @@ import io.ktor.server.netty.Netty
 import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.server.plugins.BadRequestException
 import io.ktor.server.plugins.statuspages.StatusPages
+import io.ktor.server.plugins.cors.routing.CORS
 import io.ktor.server.response.respond
 import io.ktor.server.routing.get
 import io.ktor.server.routing.routing
@@ -32,7 +34,7 @@ fun main() {
 }
 
 /** Configures the Mateju API. */
-fun Application.module(userRepository: UserRepository = JsonUserRepository()) {
+fun Application.module(userRepository: UserRepository = configuredUserRepository()) {
     install(ContentNegotiation) {
         json(
             Json {
@@ -51,6 +53,12 @@ fun Application.module(userRepository: UserRepository = JsonUserRepository()) {
         }
     }
 
+    install(CORS) {
+        anyHost() // The mobile and WASM clients are hosted separately from this API.
+        allowHeader(io.ktor.http.HttpHeaders.ContentType)
+        allowMethod(io.ktor.http.HttpMethod.Post)
+    }
+
     val authService = AuthService(userRepository)
 
     routing {
@@ -61,3 +69,9 @@ fun Application.module(userRepository: UserRepository = JsonUserRepository()) {
         authRoutes(authService)
     }
 }
+
+private fun configuredUserRepository(): UserRepository =
+    System.getenv("DATABASE_URL")
+        ?.takeIf { it.isNotBlank() }
+        ?.let(::DatabaseUserRepository)
+        ?: JsonUserRepository()

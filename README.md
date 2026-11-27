@@ -18,6 +18,10 @@ cd backend
 El servidor queda disponible en `http://localhost:8080` (o en el puerto de la
 variable de entorno `PORT`).
 
+## Railway y PostgreSQL
+
+El servicio detecta `DATABASE_URL`. Cuando Railway la inyecta desde el servicio PostgreSQL, crea la tabla `users` y carga las cuentas de demostración iniciales. Sin esa variable conserva el archivo JSON para desarrollo local. El archivo `railway.toml` define el build, el inicio y el healthcheck `/health`.
+
 ```powershell
 Invoke-RestMethod http://localhost:8080/health
 
